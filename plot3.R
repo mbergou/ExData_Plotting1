@@ -12,22 +12,23 @@ data <- read.table(
   sep = ";",
   na.strings = "?",
   stringsAsFactors = FALSE)
+# Keep only data for 2007-02-01 and 2007-02-02.
+data <- data[data$Date %in% c("1/2/2007", "2/2/2007"), ]
 
-# Extract the subset of the data for 2007-02-01 and 2007-02-02.
-data$DateTime <- strptime(paste(data$Date, data$Time), format = "%d/%m/%Y %H:%M:%S")
-dataSubset <- data[which(data$DateTime >= "2007-02-01" & data$DateTime < "2007-02-03"), ]
+# Add a column representing the combined date/time.
+data$datetime <- strptime(paste(data$Date, data$Time), format = "%d/%m/%Y %H:%M:%S")
 
 # Create a PNG containing a plot of Energy sub metering vs time.
 png("plot3.png", width = 480, height = 480)
 plot(
-  dataSubset$DateTime,
-  dataSubset$Sub_metering_1,
+  data$datetime,
+  data$Sub_metering_1,
   type = "l",
   col = "black",
   xlab = NA,
   ylab = "Energy sub metering")
-lines(dataSubset$DateTime, dataSubset$Sub_metering_2, col = "red")
-lines(dataSubset$DateTime, dataSubset$Sub_metering_3, col = "blue")
+lines(data$datetime, data$Sub_metering_2, col = "red")
+lines(data$datetime, data$Sub_metering_3, col = "blue")
 legend(
   "topright",
   legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"),
